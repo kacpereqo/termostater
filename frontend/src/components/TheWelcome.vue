@@ -7,6 +7,7 @@ import * as echarts from 'echarts'
 import { onMounted } from 'vue'
 
 const URL = 'http://192.168.5.6:8000/reading'
+const TIME_OFFSET = 3600 // 1h
 
 interface Data {
   serial_number: string
@@ -20,8 +21,15 @@ function fetchData() {
     .then((data: Data[]) => {
       data = data.filter((item) => Math.abs(item.temperature) < 40)
 
-      const xAxisData = data.map((item) => item.timestamp)
-      const seriesData = data.map((item) => item.temperature)
+      const xAxisData = data.map((item) => {
+        // ntp time is in seconds, convert to milliseconds
+        const date = new Date(item.timestamp * 1000 - TIME_OFFSET * 1000)
+        return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+      })
+      const seriesData = data.map((item) => {
+        // round to 2 decimal places
+        return Math.round(item.temperature * 100) / 100
+      })
 
       const lineChart = echarts.getInstanceByDom(
         document.querySelector('.chart-container') as HTMLElement
@@ -63,7 +71,7 @@ const lineChartOption = {
   },
   series: [
     {
-      name: 'Sales',
+      name: '°C',
       data: [999, 999],
       type: 'line'
     }
