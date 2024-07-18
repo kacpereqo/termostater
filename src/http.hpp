@@ -1,24 +1,24 @@
 #pragma once
 
-#include "ESP8266HTTPClient.h"
-#include "ESP8266WiFi.h"
 #include <Arduino.h>
+#include <ESP8266HTTPClient.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
+#include "constatns.hpp"
 
-class HTTP {
+class HTTP
+{
 public:
-  void connect() {
+  void connect()
+  {
     Serial.println("HTTP client initialized");
-
-    constexpr char WIFI_SSID[] = "FTTH-1-2.4G-483580_EXT";
-    constexpr char WIFI_PASS[] = "QyFxdyrD";
 
     WiFi.begin(WIFI_SSID, WIFI_PASS);
 
     Serial.println();
     Serial.print("Connecting");
-    while (WiFi.status() != WL_CONNECTED) {
+    while (WiFi.status() != WL_CONNECTED)
+    {
       delay(500);
       Serial.print(".");
     }
@@ -26,5 +26,32 @@ public:
     Serial.println("success!");
     Serial.print("IP Address is: ");
     Serial.println(WiFi.localIP());
+  }
+
+  void sendData(float tempereature, char *serialNumber, time_t epochTime)
+  {
+    HTTPClient http;
+    WiFiClient client;
+    char url[256];
+
+    sprintf(url, "%s?serial_number=%s&temperature=%f&timestamp=%ld", HTTP_SERVER, serialNumber, tempereature, epochTime);
+
+    bool a = http.begin(client, url);
+    Serial.println(a);
+    int httpCode = http.POST("");
+
+    if (httpCode > 0)
+    {
+      Serial.printf("[HTTP] POST... code: %d\n", httpCode);
+      if (httpCode == HTTP_CODE_OK)
+      {
+        String payload = http.getString();
+        Serial.println(payload);
+      }
+    }
+    else
+    {
+      Serial.printf("[HTTP] POST... failed, error: %s\n", http.errorToString(httpCode).c_str());
+    }
   }
 };

@@ -1,28 +1,31 @@
 #include <Arduino.h>
 
 #include "http.hpp"
-// #include "thermometer.hpp"
-
-constexpr char WIFI_SSID[] = "FTTH-1-2.4G-483580_EXT";
-constexpr char WIFI_PASS[] = "QyFxdyrD";
+#include "thermometer.hpp"
+#include "time.hpp"
 
 HTTP httpClient;
-// Time dateTime;
-// Thermometer thermometer;
+Time dateTime;
+Thermometer thermometer;
 
-void setup() {
+void setup()
+{
 
   Serial.begin(9600);
   while (!Serial)
     ;
-  // httpClient.connect();
-  // dateTime.begin();
+  httpClient.connect();
+  dateTime.begin();
 }
 
-void loop() {
+void loop()
+{
 
-  // Serial.println(dateTime.getEpochTime());
-  // Serial.println(thermometer.getTemperature());
+  float temperature = thermometer.getTemperature();
+  char *serialNumber = thermometer.serialNumber;
+  time_t epochTime = dateTime.getEpochTime();
+
+  httpClient.sendData(temperature, serialNumber, epochTime);
 
   delay(1000);
 }

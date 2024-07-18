@@ -89,9 +89,3 @@ def getReadingBySerialNumber(serial_number: str) -> list[Reading]:
     readings = c.fetchall()
 
     return readings
-
-
-if __name__ == "__main__":
-    import uvicorn
-
-    uvicorn.run("backend:app", reload=True)
