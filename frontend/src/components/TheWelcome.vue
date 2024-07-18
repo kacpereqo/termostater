@@ -79,9 +79,10 @@ onMounted(() => {
   window.addEventListener('resize', onResize)
   const lineChart = echarts.init(document.querySelector('.chart-container') as HTMLElement)
 
-  fetchData()
-
-  lineChart.setOption(lineChartOption)
+  if (lineChart !== null) {
+    fetchData()
+    lineChart.setOption(lineChartOption)
+  }
 })
 </script>
 
