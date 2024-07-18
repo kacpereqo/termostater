@@ -4,10 +4,6 @@
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 #include <cstdint>
-#include "constatns.hpp"
-
-// WiFiUDP ntpUDP;
-// NTPClient timeClient(ntpUDP, NTP_ADDRESS, NTP_OFFSET, NTP_INTERVAL);
 
 class Time
 {
@@ -16,18 +12,9 @@ private:
   NTPClient timeClient;
 
 public:
-  Time() : timeClient(ntpUDP)
-  {
-    timeClient.begin();
-    timeClient.setTimeOffset(NTP_OFFSET);
-    timeClient.setUpdateInterval(NTP_INTERVAL);
-  }
+  Time();
 
-  void begin() { timeClient.begin(); }
+  void begin();
 
-  unsigned long getEpochTime()
-  {
-    timeClient.update();
-    return timeClient.getEpochTime();
-  }
+  time_t getEpochTime();
 };
