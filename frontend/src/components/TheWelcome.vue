@@ -26,16 +26,18 @@ function fetchData() {
       const lineChart = echarts.getInstanceByDom(
         document.querySelector('.chart-container') as HTMLElement
       )
-      lineChart.setOption({
-        xAxis: {
-          data: xAxisData
-        },
-        series: [
-          {
-            data: seriesData
-          }
-        ]
-      })
+      if (lineChart !== null && lineChart !== undefined) {
+        lineChart.setOption({
+          xAxis: {
+            data: xAxisData
+          },
+          series: [
+            {
+              data: seriesData
+            }
+          ]
+        })
+      }
     })
     .catch((error) => {
       console.error('Error:', error)
@@ -72,7 +74,7 @@ function onResize() {
   const lineChart = echarts.getInstanceByDom(
     document.querySelector('.chart-container') as HTMLElement
   )
-  if (lineChart !== null) {
+  if (lineChart !== null && lineChart !== undefined) {
     lineChart.resize()
   }
 }
