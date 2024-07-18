@@ -72,7 +72,9 @@ function onResize() {
   const lineChart = echarts.getInstanceByDom(
     document.querySelector('.chart-container') as HTMLElement
   )
-  lineChart.resize()
+  if (lineChart !== null) {
+    lineChart.resize()
+  }
 }
 
 onMounted(() => {
