@@ -8,6 +8,9 @@ constexpr uint32_t NTP_OFFSET = 60 * 60;     // In seconds
 constexpr uint32_t NTP_INTERVAL = 60 * 1000; // In miliseconds
 constexpr char NTP_ADDRESS[] = "europe.pool.ntp.org";
 
+// Path: src/thermometer.hpp
+constexpr uint8_t SENSOR_PIN = D2;
+
 // Path: src/http.hpp
 constexpr char WIFI_SSID[] = "FTTH-1-2.4G-483580_EXT";
 constexpr char WIFI_PASS[] = "QyFxdyrD";
