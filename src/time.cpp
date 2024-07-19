@@ -1,5 +1,3 @@
-#pragma once
-
 #include <ESP8266HTTPClient.h>
 #include <NTPClient.h>
 #include <WiFiUdp.h>

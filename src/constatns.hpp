@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <Arduino.h>
 
 constexpr char URL[] = "http:/";
 
@@ -14,4 +15,11 @@ constexpr uint8_t SENSOR_PIN = D2;
 // Path: src/http.hpp
 constexpr char WIFI_SSID[] = "FTTH-1-2.4G-483580_EXT";
 constexpr char WIFI_PASS[] = "QyFxdyrD";
-constexpr char HTTP_SERVER[] = "http://192.168.5.6:8000/reading";
+constexpr char HTTP_SERVER[] = "http://192.168.5.8:8000/reading";
+
+// Path: src/eeprom.hpp
+constexpr uint16_t SSID_ADDRESS = 0;
+constexpr uint16_t SSID_SIZE = 32;
+
+constexpr uint16_t PASS_ADDRESS = 32;
+constexpr uint16_t PASS_SIZE = 32;

@@ -30,7 +30,7 @@ void HTTP::sendData(float tempereature, char *serialNumber, time_t epochTime)
   WiFiClient client;
   char url[256];
 
-  sprintf(url, "%s?serial_number=%s&temperature=%f&timestamp=%ld", HTTP_SERVER, serialNumber, tempereature, epochTime);
+  sprintf(url, "%s?serial_number=%s&temperature=%f&timestamp=%lld", HTTP_SERVER, serialNumber, tempereature, epochTime);
 
   bool a = http.begin(client, url);
   Serial.println(a);

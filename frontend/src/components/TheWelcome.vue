@@ -6,7 +6,7 @@
 import * as echarts from 'echarts'
 import { onMounted } from 'vue'
 
-const URL = 'http://192.168.5.6:8000/reading'
+const URL = 'http://192.168.5.8:8000/reading'
 const TIME_OFFSET = 3600 // 1h
 
 interface Data {
