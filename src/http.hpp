@@ -5,10 +5,12 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include "constatns.hpp"
+#include "config.hpp"
 
 class HTTP
 {
 public:
   void connect();
-  void sendData(float tempereature, char *serialNumber, time_t epochTime);
+  void getConfig(Config &config);
+  void sendData(float tempereature, char *serialNumber);
 };

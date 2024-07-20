@@ -1,8 +1,10 @@
 import sqlite3
+from datetime import datetime
 
 from fastapi import Depends, FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from sqlmodel import Field, Session, SQLModel, create_engine
 
 
 def getApp() -> FastAPI:
@@ -24,13 +26,16 @@ app = getApp()
 class Reading(BaseModel):
     serial_number: str
     temperature: float
-    timestamp: str
+    timestamp: str | None = None
 
 
 @app.post("/reading")
 def postReading(reading: Reading = Depends()) -> Response:
     conn = sqlite3.connect("readings.sqlite")
     c = conn.cursor()
+
+    if not reading.timestamp:
+        reading.timestamp = datetime.now().timestamp()
 
     c.execute(
         """

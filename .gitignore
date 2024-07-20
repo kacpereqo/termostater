@@ -26,3 +26,4 @@
 
 *.sqlite
 readings.sqlite
+/.venv

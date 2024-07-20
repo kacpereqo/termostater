@@ -7,7 +7,6 @@ import * as echarts from 'echarts'
 import { onMounted } from 'vue'
 
 const URL = 'http://192.168.5.8:8000/reading'
-const TIME_OFFSET = 3600 // 1h
 
 interface Data {
   serial_number: string
@@ -23,7 +22,7 @@ function fetchData() {
 
       const xAxisData = data.map((item) => {
         // ntp time is in seconds, convert to milliseconds
-        const date = new Date(item.timestamp * 1000 - TIME_OFFSET * 1000)
+        const date = new Date(item.timestamp * 1000)
         return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
       })
       const seriesData = data.map((item) => {

@@ -22,15 +22,17 @@ void HTTP::connect()
   Serial.println("success!");
   Serial.print("IP Address is: ");
   Serial.println(WiFi.localIP());
+
+  void getConfig(Config & config);
 }
 
-void HTTP::sendData(float tempereature, char *serialNumber, time_t epochTime)
+void HTTP::sendData(float tempereature, char *serialNumber)
 {
   HTTPClient http;
   WiFiClient client;
   char url[256];
 
-  sprintf(url, "%s?serial_number=%s&temperature=%f&timestamp=%lld", HTTP_SERVER, serialNumber, tempereature, epochTime);
+  sprintf(url, "%s?serial_number=%s&temperature=%f", HTTP_SERVER, serialNumber, tempereature);
 
   bool a = http.begin(client, url);
   Serial.println(a);
