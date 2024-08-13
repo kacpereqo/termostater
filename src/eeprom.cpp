@@ -5,10 +5,6 @@
 
 Eeprom::Eeprom()
 {
-}
-
-void Eeprom::begin()
-{
     EEPROM.begin(512);
 
     this->ssid = this->readSsid();

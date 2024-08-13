@@ -1,6 +1,6 @@
 from db.db import DB
-from db.models import TemperatureReading
 from fastapi import APIRouter, Depends, Response
+from models.temperature import TemperatureReading, TemperatureReadingCreation
 
 router = APIRouter(tags=["temperature"])
 
@@ -8,9 +8,9 @@ db = DB()
 
 
 @router.post("/reading")
-def postReading(reading: TemperatureReading = Depends()) -> Response:
-    TemperatureReading.model_validate(reading)
-    db.insertReading(reading)
+def postReading(reading: TemperatureReadingCreation = Depends()) -> Response:
+    temp = TemperatureReading.model_validate(reading)
+    db.insertReading(temp)
 
     return Response(status_code=201)
 

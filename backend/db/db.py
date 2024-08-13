@@ -1,7 +1,7 @@
-from operator import ge
-
-import db.models
-from sqlmodel import Session, SQLModel, create_engine, select
+from models.battery import BatteryReading
+from models.config import SensorConfig
+from models.temperature import TemperatureReading
+from sqlmodel import Session, SQLModel, create_engine
 
 
 class DB:
@@ -22,44 +22,79 @@ class DB:
         return inner
 
     @getSession
-    def insertReading(self, session, reading: db.models.TemperatureReading) -> None:
+    def insertReading(self, session, reading: TemperatureReading) -> None:
         session.add(reading)
         session.commit()
         session.refresh(reading)
 
     @getSession
-    def getReadings(self, session) -> db.models.TemperatureReading:
-        return session.query(db.models.TemperatureReading).all()
+    def getReadings(self, session) -> TemperatureReading:
+        return session.query(TemperatureReading).all()
 
     @getSession
-    def getReadingsBySerial(
-        self, session, serial_number: str
-    ) -> db.models.TemperatureReading:
+    def getReadingsBySerial(self, session, serial_number: str) -> TemperatureReading:
 
         return (
-            session.query(db.models.TemperatureReading)
-            .filter(db.models.TemperatureReading.serial_number == serial_number)
+            session.query(TemperatureReading)
+            .filter(TemperatureReading.serial_number == serial_number)
             .all()
         )
 
     @getSession
-    def insertBatteryReading(self, session, reading: db.models.BatteryReading) -> None:
-        reading = db.models.BatteryReading(reading)
+    def insertBatteryReading(self, session, reading: BatteryReading) -> None:
+        reading = BatteryReading(reading)
         session.add(reading)
         session.commit()
         session.refresh(reading)
 
     @getSession
-    def getBatteryReadings(self, session) -> db.models.BatteryReading:
-        return session.query(db.models.BatteryReading).all()
+    def getBatteryReadings(self, session) -> BatteryReading:
+        return session.query(BatteryReading).all()
 
     @getSession
     def getLatestTemperatureReading(
         self, session, count: int = 1
-    ) -> db.models.TemperatureReading:
+    ) -> TemperatureReading:
         return (
-            session.query(db.models.TemperatureReading)
-            .order_by(db.models.TemperatureReading.timestamp.desc())
+            session.query(TemperatureReading)
+            .order_by(TemperatureReading.timestamp.desc())
             .limit(count)
             .all()
         )
+
+    @getSession
+    def getSensorConfig(self, session, serial_number: str) -> SensorConfig:
+
+        config = (
+            session.query(SensorConfig)
+            .filter(SensorConfig.serial_number == serial_number)
+            .first()
+        )
+
+        if config is None:
+            config = SensorConfig(
+                serial_number=serial_number,
+                min_threshold_temperature=None,
+                max_threshold_temperature=None,
+                target_temperature=None,
+                delay=5 * 60,
+            )
+            session.add(config)
+            session.commit()
+            session.refresh(config)
+
+        return config
+
+    @getSession
+    def postSensorConfig(self, session, config: SensorConfig) -> None:
+        session.query(SensorConfig).filter(
+            SensorConfig.serial_number == config.serial_number
+        ).update(
+            {
+                SensorConfig.min_threshold_temperature: config.min_threshold_temperature,
+                SensorConfig.max_threshold_temperature: config.max_threshold_temperature,
+                SensorConfig.target_temperature: config.target_temperature,
+                SensorConfig.delay: config.delay,
+            }
+        )
+        session.commit()

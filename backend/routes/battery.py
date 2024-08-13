@@ -1,6 +1,6 @@
 from db.db import DB
-from db.models import BatteryReading
 from fastapi import APIRouter, Depends, Response
+from models.battery import BatteryReading
 
 router = APIRouter(tags=["battery"])
 db = DB()

@@ -1,11 +1,10 @@
-import routes.temperature
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from utils import include_routes
+from utils import include_routes, lifespan
 
 
 def getApp() -> FastAPI:
-    app = FastAPI()
+    app = FastAPI(lifespan=lifespan)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],

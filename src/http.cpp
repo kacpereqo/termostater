@@ -4,8 +4,10 @@
 #include <WiFiClient.h>
 #include "constatns.hpp"
 #include "http.hpp"
+#include "config.hpp"
+#include <ArduinoJson.h>
 
-void HTTP::connect()
+HTTP::HTTP()
 {
   Serial.println("HTTP client initialized");
 
@@ -22,8 +24,11 @@ void HTTP::connect()
   Serial.println("success!");
   Serial.print("IP Address is: ");
   Serial.println(WiFi.localIP());
+}
 
-  void getConfig(Config & config);
+void HTTP::sendConfig(char *serial_number)
+{
+  ;
 }
 
 void HTTP::sendData(float tempereature, char *serialNumber)
@@ -32,7 +37,7 @@ void HTTP::sendData(float tempereature, char *serialNumber)
   WiFiClient client;
   char url[256];
 
-  sprintf(url, "%s?serial_number=%s&temperature=%f", HTTP_SERVER, serialNumber, tempereature);
+  sprintf(url, "%s/reading?serial_number=%s&temperature=%f", HTTP_SERVER, serialNumber, tempereature);
 
   bool a = http.begin(client, url);
   Serial.println(a);
@@ -51,4 +56,52 @@ void HTTP::sendData(float tempereature, char *serialNumber)
   {
     Serial.printf("[HTTP] POST... failed, error: %s\n", http.errorToString(httpCode).c_str());
   }
+}
+
+void HTTP::getConfig(char *serial_number)
+{
+  Config &config = Config::getInstance();
+
+  HTTPClient http;
+  WiFiClient client;
+  char url[256];
+
+  sprintf(url, "%s/config/%s", HTTP_SERVER, serial_number);
+
+  bool a = http.begin(client, url);
+  Serial.println(a);
+  int httpCode = http.GET();
+
+  if (httpCode > 0)
+  {
+    Serial.printf("[HTTP] GET... code: %d\n", httpCode);
+    if (httpCode == HTTP_CODE_OK)
+    {
+      String payload = http.getString();
+
+      JsonDocument doc;
+
+      DeserializationError error = deserializeJson(doc, payload);
+      if (error)
+      {
+        Serial.print(F("deserializeJson() failed: "));
+        Serial.println(error.f_str());
+        http.end();
+        return;
+      }
+
+      Serial.println("Deserialized JSON object");
+
+      config.delay = doc["delay"].isNull() ? NaN : doc["delay"].as<int>();
+      config.target_temperature = doc["target_temperature"].isNull() ? NaN : doc["target_temperature"].as<float>();
+      config.max_threshold_temperature = doc["max_threshold_temperature"].isNull() ? NaN : doc["max_threshold_temperature"].as<float>();
+      config.min_threshold_temperature = doc["min_threshold_temperature"].isNull() ? NaN : doc["min_threshold_temperature"].as<float>();
+    }
+  }
+  else
+  {
+    Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+  }
+
+  http.end();
 }
