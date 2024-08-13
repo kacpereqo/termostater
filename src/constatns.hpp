@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <Arduino.h>
 
-constexpr time_t THERMOMETER_TIMEOU = 1000 * 60;
+constexpr time_t THERMOMETER_TIMEOU = 1000 * 5;
 constexpr float THERMOMETER_THRESHOLD = 5.0f;
 
 // Path: src/constatns.hpp

@@ -26,9 +26,31 @@ HTTP::HTTP()
   Serial.println(WiFi.localIP());
 }
 
-void HTTP::sendConfig(char *serial_number)
+void HTTP::sendConfig(char *serial_number, Config &config)
 {
-  ;
+  HTTPClient http;
+  WiFiClient client;
+  char url[256];
+
+  sprintf(url, "%s/config/%s?delay=%lld&min_threshold_temperature=%f&max_threshold_temperature=%f&target_temperature=%f", HTTP_SERVER, serial_number, config.delay, config.min_threshold_temperature, config.max_threshold_temperature, config.target_temperature);
+
+  bool a = http.begin(client, url);
+  Serial.println(a);
+  int httpCode = http.POST("");
+
+  if (httpCode > 0)
+  {
+    Serial.printf("[HTTP] POST... code: %d\n", httpCode);
+    if (httpCode == HTTP_CODE_OK)
+    {
+      String payload = http.getString();
+      Serial.println(payload);
+    }
+  }
+  else
+  {
+    Serial.printf("[HTTP] POST... failed, error: %s\n", http.errorToString(httpCode).c_str());
+  }
 }
 
 void HTTP::sendData(float tempereature, char *serialNumber)

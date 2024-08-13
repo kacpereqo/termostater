@@ -11,8 +11,7 @@ class HTTP
 {
 public:
   HTTP();
-  void connect();
   void getConfig(char *serial_number);
-  void sendConfig(char *serial_number);
+  void sendConfig(char *serial_number, Config &config);
   void sendData(float tempereature, char *serialNumber);
 };

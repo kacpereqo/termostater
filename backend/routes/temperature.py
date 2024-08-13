@@ -11,7 +11,6 @@ db = DB()
 def postReading(reading: TemperatureReadingCreation = Depends()) -> Response:
     temp = TemperatureReading.model_validate(reading)
     db.insertReading(temp)
-
     return Response(status_code=201)
 
 

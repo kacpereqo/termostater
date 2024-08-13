@@ -11,6 +11,6 @@ def getSensorConfig(serial_number: str) -> SensorConfig:
     return db.getSensorConfig(serial_number)
 
 
-@router.post("/config/{serial_number}", status_code=201)
+@router.post("/config/{serial_number}")
 def postSensorConfig(serial_number: str, config: SensorConfig = Depends()):
     db.postSensorConfig(config)
