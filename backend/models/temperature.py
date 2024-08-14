@@ -12,8 +12,10 @@ class TemperatureReading(SQLModel, table=True):
 
     @field_validator("temperature")
     def validate_temperature(cls, value):
-        if value < -55 or value > 125:
-            raise ValueError("temperature must be between -55 and 125")
+        THERMOMETER_MIN = -127
+        THERMOMETER_MAX = 127
+        if value < THERMOMETER_MIN or value > THERMOMETER_MAX:
+            raise ValueError("temperature must be between -127 and 127")
         return value
 
 

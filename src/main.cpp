@@ -40,7 +40,7 @@ void setup()
     Serial.println("Config");
   }
 
-  while (True)
+  while (true)
   {
     if (state == State::Config)
     {
